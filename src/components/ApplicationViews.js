@@ -54,6 +54,20 @@ export default class ApplicationViews extends Component {
         })
       );
   };
+  deleteOwner = id => {
+    return fetch(`http://localhost:5002/owners/${id}`, {
+      method: "DELETE"
+    })
+      .then(e => e.json())
+      .then(() => fetch(`http://localhost:5002/owners`))
+      .then(e => e.json())
+      .then(owners =>
+        this.setState({
+          owners: owners
+        })
+      );
+  };
+
   render() {
     return (
       <React.Fragment>

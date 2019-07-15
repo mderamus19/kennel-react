@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import fire from "./EmployeeIcon.svg"
 // import "./Animal.css"
 
-export default class EmployeeLIst extends Component {
+export default class EmployeeList extends Component {
     render () {
         return (
             <section className="employees">
