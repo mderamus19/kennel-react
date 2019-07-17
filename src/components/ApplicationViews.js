@@ -7,6 +7,8 @@ import EmployeeList from "./employee/EmployeeList";
 import OwnerList from "./owner/OwnerList";
 import Login from "./authentication/Login";
 import AnimalDetail from "./animal/AnimalDetail";
+import LocationDetail from "./location/LocationDetail";
+import EmployeeDetail from "./employee/EmployeeDetail";
 import AnimalManager from "../modules/AnimalManager";
 import EmployeeManager from "../modules/EmployeeManager";
 import LocationManager from "../modules/LocationManager";
@@ -57,14 +59,11 @@ class ApplicationViews extends Component {
     return fetch(`http://localhost:5002/employees/${id}`, {
       method: "DELETE"
     })
-      .then(e => e.json())
-      .then(() => fetch(`http://localhost:5002/employees`))
-      .then(e => e.json())
-      .then(employees =>
-        this.setState({
-          employees: employees
-        })
-      );
+    .then(EmployeeManager.getAll)
+    .then(employees => {
+      this.props.history.push("/employees");
+      this.setState({ employees: employees });
+    });
   };
   deleteOwner = id => {
     return fetch(`http://localhost:5002/owners/${id}`, {
@@ -83,14 +82,11 @@ class ApplicationViews extends Component {
     return fetch(`http://localhost:5002/locations/${id}`, {
       method: "DELETE"
     })
-      .then(e => e.json())
-      .then(() => fetch(`http://localhost:5002/locations`))
-      .then(e => e.json())
-      .then(locations =>
-        this.setState({
-          locations: locations
-        })
-      );
+      .then(LocationManager.getAll)
+      .then(locations => {
+        this.props.history.push("/locations");
+        this.setState({ locations: locations });
+      });
   };
 
   render() {
@@ -104,6 +100,33 @@ class ApplicationViews extends Component {
               <LocationList
                 deleteLocation={this.deleteLocation}
                 locations={this.state.locations}
+              />
+            );
+          }}
+        />
+        <Route
+          exact
+          path="/locations/:locationId(\d+)"
+          render={props => {
+            // Find the location with the id of the route parameter
+            let location = this.state.locations.find(
+              location =>
+                location.id === parseInt(props.match.params.locationId)
+            );
+
+            // If the location wasn't found, create a default one
+            if (!location) {
+              location = {
+                id: 404,
+                name: "404",
+                location: "Location not found"
+              };
+            }
+
+            return (
+              <LocationDetail
+                location={location}
+                deleteLocation={this.deleteLocation}
               />
             );
           }}
@@ -153,6 +176,29 @@ class ApplicationViews extends Component {
             } else {
               return <Redirect to="/login" />;
             }
+          }}
+        />
+        <Route
+          exact
+          path="/employees/:employeeId(\d+)"
+          render={props => {
+            // Find the employee with the id of the route parameter
+            let employee = this.state.employees.find(
+              employee =>
+                employee.id === parseInt(props.match.params.employeeId)
+            );
+
+            // If the employee wasn't found, create a default one
+            if (!employee) {
+              employee = { id: 404, name: "404", person: "Employee not found" };
+            }
+
+            return (
+              <EmployeeDetail
+                employee={employee}
+                deleteEmployee={this.deleteEmployee}
+              />
+            );
           }}
         />
         <Route
