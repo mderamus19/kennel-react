@@ -1,16 +1,18 @@
 import { Route, Redirect } from "react-router-dom"; //Redirect is like history.push telling where to go next
 import React, { Component } from "react";
+import { withRouter } from "react-router";
 import AnimalList from "./animal/AnimalList";
 import LocationList from "./location/LocationList";
 import EmployeeList from "./employee/EmployeeList";
 import OwnerList from "./owner/OwnerList";
 import Login from "./authentication/Login";
+import AnimalDetail from "./animal/AnimalDetail";
 import AnimalManager from "../modules/AnimalManager";
 import EmployeeManager from "../modules/EmployeeManager";
 import LocationManager from "../modules/LocationManager";
 import OwnerManager from "../modules/OwnerManager";
 
-export default class ApplicationViews extends Component {
+class ApplicationViews extends Component {
   state = {
     employees: [],
     locations: [],
@@ -32,7 +34,7 @@ export default class ApplicationViews extends Component {
       })
       .then(locations => (newState.locations = locations))
       .then(() => {
-       return OwnerManager.getAll();
+        return OwnerManager.getAll();
       })
       .then(owners => (newState.owners = owners))
       .then(() => this.setState(newState));
@@ -45,14 +47,11 @@ export default class ApplicationViews extends Component {
     return fetch(`http://localhost:5002/animals/${id}`, {
       method: "DELETE"
     })
-      .then(e => e.json())
-      .then(() => fetch(`http://localhost:5002/animals`))
-      .then(e => e.json())
-      .then(animals =>
-        this.setState({
-          animals: animals
-        })
-      );
+      .then(AnimalManager.getAll)
+      .then(animals => {
+        this.props.history.push("/animals");
+        this.setState({ animals: animals });
+      });
   };
   deleteEmployee = id => {
     return fetch(`http://localhost:5002/employees/${id}`, {
@@ -123,6 +122,25 @@ export default class ApplicationViews extends Component {
         />
         <Route
           exact
+          path="/animals/:animalId(\d+)"
+          render={props => {
+            // Find the animal with the id of the route parameter
+            let animal = this.state.animals.find(
+              animal => animal.id === parseInt(props.match.params.animalId)
+            );
+
+            // If the animal wasn't found, create a default one
+            if (!animal) {
+              animal = { id: 404, name: "404", breed: "Dog not found" };
+            }
+
+            return (
+              <AnimalDetail animal={animal} deleteAnimal={this.deleteAnimal} />
+            );
+          }}
+        />
+        <Route
+          exact
           path="/employees"
           render={props => {
             if (this.isAuthenticated()) {
@@ -153,3 +171,4 @@ export default class ApplicationViews extends Component {
     );
   }
 }
+export default withRouter(ApplicationViews);

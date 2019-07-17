@@ -22,12 +22,21 @@
       "id": 1,
       "name": "Nashville North",
       "address": "500 Circle Way"
+    },
+    {
+      "id": 2,
+      "name": "Nashville South",
+      "address": "10101 Binary Court"
     }
   ],
   "animals": [
     {
       "id": 1,
       "name": "Doodles"
+    },
+    {
+      "id": 3,
+      "name": "Angus"
     },
     {
       "id": 4,
@@ -43,6 +52,11 @@
     }
   ],
   "owners": [
+    {
+      "id": 1,
+      "name": "John Marks",
+      "phone": "901-452-3859"
+    },
     {
       "id": 2,
       "name": "Lauren Londie",
