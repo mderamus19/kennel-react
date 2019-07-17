@@ -31,14 +31,6 @@
   ],
   "animals": [
     {
-      "id": 1,
-      "name": "Doodles"
-    },
-    {
-      "id": 3,
-      "name": "Angus"
-    },
-    {
       "id": 4,
       "name": "Henley"
     },
@@ -52,11 +44,6 @@
     }
   ],
   "owners": [
-    {
-      "id": 1,
-      "name": "John Marks",
-      "phone": "901-452-3859"
-    },
     {
       "id": 2,
       "name": "Lauren Londie",
