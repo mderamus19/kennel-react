@@ -6,7 +6,10 @@ import LocationList from "./location/LocationList";
 import EmployeeList from "./employee/EmployeeList";
 import OwnerList from "./owner/OwnerList";
 import Login from "./authentication/Login";
+import AnimalEditForm from "./animal/AnimalForm";
 import AnimalForm from "./animal/AnimalForm";
+import EmployeeForm from "./employee/EmployeeForm";
+import OwnerForm from "./owner/OwnerForm";
 import AnimalDetail from "./animal/AnimalDetail";
 import LocationDetail from "./location/LocationDetail";
 import EmployeeDetail from "./employee/EmployeeDetail";
@@ -97,6 +100,32 @@ class ApplicationViews extends Component {
           animals: animals
         })
       );
+  addEmployee = employee =>
+    EmployeeManager.post(employee)
+      .then(() => EmployeeManager.getAll())
+      .then(employees =>
+        this.setState({
+          employees: employees
+        })
+      );
+  addOwner = owner =>
+    OwnerManager.post(owner)
+      .then(() => OwnerManager.getAll())
+      .then(owners =>
+        this.setState({
+          owners: owners
+        })
+      );
+  updateAnimal = editedAnimalObject => {
+    return AnimalManager.put(editedAnimalObject)
+      .then(() => AnimalManager.getAll())
+      .then(animals => {
+        this.setState({
+          animals: animals
+        });
+      });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -139,19 +168,21 @@ class ApplicationViews extends Component {
             );
           }}
         />
+        {/* animal routes */}
         <Route
           exact
           path="/animals"
-          render={(props) => {
+          render={props => {
             return (
-              <AnimalList {...props}
+              <AnimalList
+                {...props}
                 deleteAnimal={this.deleteAnimal}
                 animals={this.state.animals}
               />
             );
           }}
         />
-         {/* Our shiny new route. We pass employees to the AnimalForm so a
+        {/* Our shiny new route. We pass employees to the AnimalForm so a
         dropdown can be populated */}
         <Route
           path="/animals/new"
@@ -185,19 +216,48 @@ class ApplicationViews extends Component {
           }}
         />
         <Route
+          path="/animals/:animalId(\d+)/edit"
+          render={props => {
+            return (
+              <AnimalEditForm
+                {...props}
+                employees={this.state.employees}
+                updateAnimal={this.updateAnimal}
+              />
+            );
+          }}
+        />
+        {/* employees route */}
+        <Route
           exact
           path="/employees"
           render={props => {
             if (this.isAuthenticated()) {
               return (
                 <EmployeeList
+                  {...props}
                   deleteEmployee={this.deleteEmployee}
                   employees={this.state.employees}
+                  animals={this.state.animals}
                 />
               );
             } else {
               return <Redirect to="/login" />;
             }
+          }}
+        />
+        {/* Our shiny new route. We pass employees to the EmployeeForm so a
+        dropdown can be populated */}
+        <Route
+          path="/employees/new"
+          render={props => {
+            return (
+              <EmployeeForm
+                {...props}
+                addOwner={this.addOwner}
+                owners={this.state.owners}
+              />
+            );
           }}
         />
         <Route
@@ -224,10 +284,12 @@ class ApplicationViews extends Component {
           }}
         />
         <Route
+          exact
           path="/owners"
           render={props => {
             return (
               <OwnerList
+                {...props}
                 deleteOwner={this.deleteOwner}
                 owners={this.state.owners}
               />
@@ -235,6 +297,20 @@ class ApplicationViews extends Component {
           }}
         />
         <Route path="/login" component={Login} />
+        {/* Our shiny new route. We pass employees to the AnimalForm so a
+        dropdown can be populated */}
+        <Route
+          path="/owners/new"
+          render={props => {
+            return (
+              <OwnerForm
+                {...props}
+                addOwner={this.addOwner}
+                employees={this.state.employees}
+              />
+            );
+          }}
+        />
       </React.Fragment>
     );
   }
