@@ -49,6 +49,18 @@
     {
       "id": 6,
       "name": "Checkers"
+    },
+    {
+      "name": "CJ",
+      "breed": "Poople",
+      "employeeId": 3,
+      "id": 7
+    },
+    {
+      "name": "Goldie",
+      "breed": "Golden Retriever",
+      "employeeId": 1,
+      "id": 8
     }
   ],
   "owners": [

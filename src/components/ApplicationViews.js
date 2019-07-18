@@ -6,6 +6,7 @@ import LocationList from "./location/LocationList";
 import EmployeeList from "./employee/EmployeeList";
 import OwnerList from "./owner/OwnerList";
 import Login from "./authentication/Login";
+import AnimalForm from "./animal/AnimalForm";
 import AnimalDetail from "./animal/AnimalDetail";
 import LocationDetail from "./location/LocationDetail";
 import EmployeeDetail from "./employee/EmployeeDetail";
@@ -59,11 +60,11 @@ class ApplicationViews extends Component {
     return fetch(`http://localhost:5002/employees/${id}`, {
       method: "DELETE"
     })
-    .then(EmployeeManager.getAll)
-    .then(employees => {
-      this.props.history.push("/employees");
-      this.setState({ employees: employees });
-    });
+      .then(EmployeeManager.getAll)
+      .then(employees => {
+        this.props.history.push("/employees");
+        this.setState({ employees: employees });
+      });
   };
   deleteOwner = id => {
     return fetch(`http://localhost:5002/owners/${id}`, {
@@ -88,7 +89,14 @@ class ApplicationViews extends Component {
         this.setState({ locations: locations });
       });
   };
-
+  addAnimal = animal =>
+    AnimalManager.post(animal)
+      .then(() => AnimalManager.getAll())
+      .then(animals =>
+        this.setState({
+          animals: animals
+        })
+      );
   render() {
     return (
       <React.Fragment>
@@ -134,11 +142,25 @@ class ApplicationViews extends Component {
         <Route
           exact
           path="/animals"
-          render={() => {
+          render={(props) => {
             return (
-              <AnimalList
+              <AnimalList {...props}
                 deleteAnimal={this.deleteAnimal}
                 animals={this.state.animals}
+              />
+            );
+          }}
+        />
+         {/* Our shiny new route. We pass employees to the AnimalForm so a
+        dropdown can be populated */}
+        <Route
+          path="/animals/new"
+          render={props => {
+            return (
+              <AnimalForm
+                {...props}
+                addAnimal={this.addAnimal}
+                employees={this.state.employees}
               />
             );
           }}
