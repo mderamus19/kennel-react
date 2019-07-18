@@ -57,9 +57,9 @@
       "id": 7
     },
     {
-      "name": "Goldie",
-      "breed": "Golden Retriever",
-      "employeeId": 1,
+      "name": "Goliath",
+      "breed": "St Bernard",
+      "employeeId": 4,
       "id": 8
     }
   ],
@@ -83,6 +83,11 @@
       "id": 4,
       "name": "Nick York",
       "phone": "334-689-1234"
+    },
+    {
+      "name": "David",
+      "employeeId": 4,
+      "id": 5
     }
   ]
 }
